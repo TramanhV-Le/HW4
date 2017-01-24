@@ -1,0 +1,148 @@
+import java.util.ArrayList;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.net.URL;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+/**
+ * DESCRIPTION: Calling all other classes in the City's main class, displaying the names, pay, and occupants of buildings.
+ * @author tle19
+ * Uses already-input names and information to display
+ */
+public class City extends JComponent implements MouseMotionListener {
+	int imageKx = 10; // Kx = coordinates for Kid on X-axis
+	int imageKy = 10; // Ky = coordinates for Kid on Y-axis
+	int imagePx = 35, imagePy = 20; // Px = Police on x, Py = Police on y
+	int imageTx = 50, imageTy = 50; // Tx = Teacher on x, Ty = Teacher on y;
+	Image kid, city, school, cityHall, police, teacher;
+	public City(Image k, Image elementary, Image cityhall, Image p, Image town, Image t){
+		kid = k;
+		school = elementary;
+		cityHall = cityhall;
+		city = town;
+		police = p;
+		teacher = t;
+		
+		addMouseMotionListener(this);
+	}
+	public City(Image elementary) {
+		school = elementary;
+	}
+	public void mouseDragged(MouseEvent e)
+	{	
+		imageX=e.getX();
+		imageY=e.getY();
+		repaint();
+	}
+	
+	public void mouseMoved(MouseEvent e){}
+	
+	public void paint(Graphics g){
+		Graphics2D g2=(Graphics2D)g;
+		int x = imageX;
+		int y =imageY;
+		g2.drawImage(city,0,0,this);
+		g2.drawImage(kid, imageX, imageY, this);
+		g2.drawImage(teacher, imageX, imageY, this);
+		g2.drawImage(police, imageX, imageY, this);
+		g2.drawImage(school,38,330,this);
+		g2.drawImage(cityHall, 365, 120, this);
+	}
+	
+	static int imageWidth=100, imageHeight=80; 
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		String city = "/Resource/city.png";
+		String kid = "/Resource/kid.png";
+		String teacher = "/Resource/teacher.png";
+		String school = "/Resource/elementary.jpg";
+		String cityHall = "/Resource/cityhall.jpg";
+		String polofc = "/Resource/policepng.png";
+		
+		Image poloff = Toolkit.getDefaultToolkit().getImage(City.class.getResource(polofc));
+		poloff = poloff.getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
+		Image gteach = Toolkit.getDefaultToolkit().getImage(City.class.getResource(teacher));
+		gteach = gteach.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+		Image gkid = Toolkit.getDefaultToolkit().getImage(City.class.getResource(kid));
+	    gkid = gkid.getScaledInstance(imageWidth,imageHeight,Image.SCALE_SMOOTH);
+	    
+	    Image town = Toolkit.getDefaultToolkit().getImage(City.class.getResource(city));
+	    Image elementary = Toolkit.getDefaultToolkit().getImage(City.class.getResource(school));
+	    Image cityhall = Toolkit.getDefaultToolkit().getImage(City.class.getResource(cityHall));
+	    elementary = elementary.getScaledInstance(265,250,Image.SCALE_DEFAULT);
+	    cityhall = cityhall.getScaledInstance(270,225,Image.SCALE_DEFAULT);
+	    
+	    JFrame frame = new JFrame("DragImage");  
+	      frame.add(new City(gkid,elementary,cityhall,poloff,town,gteach));
+	      frame.setSize(1065,843);
+	      frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+	      frame.setVisible(true);
+	      
+		PersonClass[] people = { new Police("Frank",63,5558565,Police.Rank.Chief), 
+								 new Police("Tabitha",41,5559070,Police.Rank.Sargeant), 
+								 new Police("Geoffrey",49,5552345,Police.Rank.Captain),
+								 new Police("Ethan",26,5559779,Police.Rank.Patrol),
+								 new Teacher("Tina",34,7771234,8,"Math"),
+								 new Teacher("Duncan",52,7774590,11,"English"),
+								 new Teacher("Lucas",30,7774590,12,"French"),
+								 new Kid("Nini",9,5440805,"Gummy Bears"),
+								 new Kid("Esther",4,5441124,"Chocolate"),
+								 new Kid("Kristen",15,5441124,"Starburst")};
+		Building[] building = {  new CityHall("City Hall","123 Front St."), 
+								 new School("Elementary School","987 Back St."),
+								 new School("Middle School","453 East Ave."),
+								 new School("High School","576 West Ave.")};
+		
+		/**
+		 * DESCRIPTION: Takes the input length of occupants to display the values already assigned in PersonClass.
+		 */
+		System.out.printf("People in City: \n");
+		for(int i=0; i < people.length; i++) {
+			System.out.printf("%s, %d, %d \n", people[i].getName(), people[i].getAge(), people[i].getPhone());
+		}
+		System.out.printf("\nBuildings in City: \n");
+		for(int i=0; i < building.length; i++) {
+			System.out.printf("%s, %s \n", building[i].name, building[i].address);
+		}
+		String PolOfc1 = people[0].getName();
+		String PolOfc2 = people[1].getName();
+		String PolOfc3 = people[3].getName();
+		CityHall c = (CityHall) building[0];
+		c.addOcc(PolOfc1);
+		c.addOcc(PolOfc2);
+		c.addOcc(PolOfc3);
+		c.showOcc();
+		
+		String Teach1 = people[4].getName();
+		String Teach2 = people[6].getName();
+		String Kid1 = people[8].getName();
+		String Kid2 = people[9].getName();
+		
+		School s = (School) building[1];
+		s.addOcc(Teach1);
+		s.addOcc(Teach2);
+		s.addOcc(Kid1);
+		s.addOcc(Kid2);
+		s.showOcc();
+		
+		Teacher t1 = (Teacher) people[5];
+		t1.pay();
+		System.out.printf("\n%s's monthly paycheck values at: %d \n", t1.name, t1.pay());
+		Police p1 = (Police) people[2];
+		p1.pay();
+		System.out.printf("%s's monthly paycheck values at: %d \n", p1.name, p1.pay());
+	}
+
+}

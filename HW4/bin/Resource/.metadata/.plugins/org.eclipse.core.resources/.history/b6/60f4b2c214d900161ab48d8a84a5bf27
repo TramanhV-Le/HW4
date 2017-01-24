@@ -1,0 +1,48 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+public class EmpID {
+	private static final int minNum = 1000;
+	private static int lastNum = minNum;
+	
+	private int id;
+	private String empName;
+	private String occupation;
+	
+	public void EmployeeEntry(String name, String occ) {
+		empName = name;
+		occupation = occ;
+		id = lastNum;
+		lastNum++;
+	}
+	
+	public String getName() { return empName; }
+    public String getOcc() { return occupation; }
+    public String getID() { return String.format("%d-%01d", id/100, id%100); }
+    public Integer getIDNum() { return id; }
+
+    public String toString() { return String.format("%s, %s, %s", getName(), getOcc(), getID()); }
+
+    private static Map <Integer, EmpID > eid = new HashMap < Integer, EmpID>();
+    
+    public static void main(String[] args) {
+        inputID();
+        Random rnd = new Random();
+        System.out.println("10 employees in city: ");
+        for (int i=0; i < 10; i++) {
+            Integer id = rnd.nextInt(getMaxNumber()- getMinNum()) + getMinNum();
+            System.out.printf("%d: %s\n", id, eid.get(id));
+        }
+    }
+	private static String[] fnames = {"Frank", "Tabitha", "Geoffrey", "Ethan", "Tina", 
+										"Duncan", "Lucas", "Nini", "Esther", "Kristen" };
+    private static String[] lnames = {"Smith", "Ariston", "Vincent", "Johnson", "Stewart", 
+    									"Zimmerman", "Taylors", "Richards", "Easton" };
+    private static String[] streets= {"Main", "East", "West", "Back", "Front", "le Bui", "South", "North" };
+
+	private static int getMinNum() { return 0; }
+	private static int getMaxNumber() { return 0; }
+
+
+}

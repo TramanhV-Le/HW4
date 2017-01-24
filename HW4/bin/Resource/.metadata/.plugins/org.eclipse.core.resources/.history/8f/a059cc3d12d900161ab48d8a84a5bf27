@@ -1,0 +1,25 @@
+// private static Map<Integer, EmpID > id = new HashMap < Integer, EmpID >();
+
+public class EmpID {
+	private static final int minNum = 1000;
+	private static int lastNum = minNum;
+	
+	private int id;
+	private String empName;
+	private String occupation;
+	
+	public void EmployeeEntry(String name, String occ) {
+		empName = name;
+		occupation = occ;
+		id = lastNum;
+		lastNum++;
+	}
+	
+	public String getName() { return empName; }
+    public String getOcc() { return occupation; }
+    public String getID() { return String.format("%d-%01d", id/100, id%100); }
+    public Integer getIDNum() { return id; }
+
+    public String toString() { return String.format("%s, %s, %s", getName(), getOcc(), getID()); }
+
+}
